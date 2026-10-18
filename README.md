@@ -7,6 +7,7 @@ Aplikasi web Streamlit yang menerima input gambar lalu menampilkan prediksi kela
 telah dioptimasi (hyperparameter tuning dan transfer learning).
 
 Aplikasi online: 
+
 Notebook Colab: https://colab.research.google.com/drive/13x0u_lwOCBVfb5aG7Ca71KS5ydcRC08F?usp=sharing
 ## Anggota Kelompok
 - Farras Givari (2902716743)

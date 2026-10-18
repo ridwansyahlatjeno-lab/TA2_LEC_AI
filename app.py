@@ -1,9 +1,3 @@
-"""
-Kontrak model (dari notebook Colab TK2):
-- Input  : gambar RGB 32x32x3, nilai piksel 0-255 (preprocessing ada DI DALAM model)
-- Output : probabilitas softmax untuk 10 kelas CIFAR-10
-"""
-
 import json
 from pathlib import Path
 
@@ -29,7 +23,6 @@ INPUT_SIZE = (32, 32)
 st.set_page_config(page_title="Klasifikasi CIFAR-10", page_icon="🖼️", layout="centered")
 
 
-# ---------- Memuat model & metadata (sekali saja, di-cache) ----------
 @st.cache_resource(show_spinner="Memuat model...")
 def load_model():
     import tensorflow as tf
@@ -45,11 +38,9 @@ def load_json(path: Path, default):
 
 
 def preprocess(img: Image.Image) -> np.ndarray:
-    """Center-crop ke persegi lalu resize ke 32x32, seperti citra CIFAR-10.
-    Normalisasi TIDAK dilakukan di sini karena sudah menjadi layer di dalam model."""
     img = ImageOps.exif_transpose(img).convert("RGB")
     img = ImageOps.fit(img, INPUT_SIZE, method=Image.BICUBIC)
-    return np.asarray(img, dtype=np.float32)  # (32, 32, 3), nilai 0-255
+    return np.asarray(img, dtype=np.float32)
 
 
 def label(name: str) -> str:
@@ -59,7 +50,6 @@ def label(name: str) -> str:
 classes = load_json(CLASSES_PATH, DEFAULT_CLASSES)
 info = load_json(INFO_PATH, {})
 
-# ---------- Sidebar: informasi model ----------
 with st.sidebar:
     st.header("Tentang Model")
     if info:
@@ -75,7 +65,6 @@ with st.sidebar:
     st.divider()
     st.caption("Tugas Kelompok 2 · Optimasi dan Implementasi CNN dalam Aplikasi Sederhana")
 
-# ---------- Halaman utama ----------
 st.title("🖼️ Klasifikasi Gambar CIFAR-10")
 st.write(
     "Upload sebuah gambar yang berisi **salah satu dari 10 kelas** CIFAR-10. "
@@ -98,7 +87,7 @@ example_files = sorted(EXAMPLES_DIR.glob("*.png")) + sorted(EXAMPLES_DIR.glob("*
 chosen_example = None
 if example_files and uploaded is None:
     names = ["—"] + [p.name for p in example_files]
-    pick = st.selectbox("…atau coba gambar contoh (CIFAR-10.1, tidak ada di data training):", names)
+    pick = st.selectbox("…atau coba gambar contoh:", names)
     if pick != "—":
         chosen_example = EXAMPLES_DIR / pick
 
@@ -111,7 +100,7 @@ if source is None:
 try:
     image = Image.open(source)
     x = preprocess(image)
-except Exception as e:  # file rusak / bukan gambar
+except Exception as e:
     st.error(f"Gambar tidak dapat dibaca: {e}")
     st.stop()
 
@@ -142,9 +131,3 @@ for i in order[:3]:
 
 with st.expander("Probabilitas semua kelas"):
     st.bar_chart({label(c): float(p) for c, p in zip(classes, probs)}, horizontal=True)
-
-st.caption(
-    "Catatan: model dilatih dengan citra CIFAR-10 berukuran 32×32 piksel, sehingga gambar "
-    "di-crop persegi dan diperkecil sebelum diprediksi. Foto dengan satu objek di tengah "
-    "memberikan hasil paling baik."
-)
