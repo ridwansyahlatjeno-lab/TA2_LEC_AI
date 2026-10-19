@@ -20,7 +20,7 @@ LABEL_ID = {
 }
 INPUT_SIZE = (32, 32)
 
-st.set_page_config(page_title="Klasifikasi CIFAR-10", page_icon="🖼️", layout="centered")
+st.set_page_config(page_title="Klasifikasi CIFAR-10", layout="centered")
 
 
 @st.cache_resource(show_spinner="Memuat model...")
@@ -63,9 +63,9 @@ with st.sidebar:
     st.write("**Dataset:** CIFAR-10 (10 kelas)")
     st.caption(", ".join(label(c) for c in classes))
     st.divider()
-    st.caption("Tugas Kelompok 2 · Optimasi dan Implementasi CNN dalam Aplikasi Sederhana")
+    st.caption("Optimasi dan Implementasi CNN dalam Aplikasi Sederhana")
 
-st.title("🖼️ Klasifikasi Gambar CIFAR-10")
+st.title("Klasifikasi Gambar CIFAR-10")
 st.write(
     "Upload sebuah gambar yang berisi **salah satu dari 10 kelas** CIFAR-10. "
     "Model CNN akan memprediksi kelasnya beserta tingkat keyakinannya."
